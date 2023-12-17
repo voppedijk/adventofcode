@@ -2,375 +2,100 @@ package com.advent2022.day05;
 
 import com.utilities.FileProcessor;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class Advent05 {
 
-	Stack<String> stack1 = new Stack<>();
-	Stack<String> stack2 = new Stack<>();
-	Stack<String> stack3 = new Stack<>();
-	Stack<String> stack4 = new Stack<>();
-	Stack<String> stack5 = new Stack<>();
-	Stack<String> stack6 = new Stack<>();
-	Stack<String> stack7 = new Stack<>();
-	Stack<String> stack8 = new Stack<>();
-	Stack<String> stack9 = new Stack<>();
+    public static void main(String[] args) {
+        List<String> input = FileProcessor.textFileToList("2022","05.txt");
+        Advent05 aoc = new Advent05();
+        Map<Integer, Deque> dequeMap = aoc.getIntegerDequeMap(input, false); //true for part1, false for part2
 
-	List<String> bestand;
+        for (Map.Entry<Integer, Deque> entry : dequeMap.entrySet()) {
+            System.out.print(entry.getValue().peekLast());
+        }
 
-	public void init() throws IOException {
-		bestand = FileProcessor.textFileToList("", "");
+    }
 
-	}
+    public Map<Integer, Deque> getIntegerDequeMap(List<String> input, boolean part1) {
+        Map<Integer, Deque> dequeMap = createDeque(input);
+        List<Instruction> instructionLst = new ArrayList<>();
 
-	public void opdracht5() throws IOException {
-		init();
-		createStacks();
+        for (String s : input) {
+            if (s.startsWith("move")) {
+                instructionLst.add(new Instruction(s));
+            }
+        }
 
-		for (String s : bestand) {
+        if (part1) {
+            for (Instruction instruction : instructionLst) {
+                moveCrate(dequeMap, instruction);
+            }
+        } else {
+            for (Instruction instruction : instructionLst) {
+                moveCrate2(dequeMap, instruction);
+            }
+        }
 
-			String[] splitOpKoppelteken = s.split("-");
+        return dequeMap;
+    }
 
-			int moveAantalKratten = Integer.valueOf(splitOpKoppelteken[0]);
-			int teller = 0;
-			int from = Integer.valueOf(splitOpKoppelteken[1]);
-			int to = Integer.valueOf(splitOpKoppelteken[2]);
+    public Map<Integer, Deque> createDeque(List<String> input) {
+        Map<Integer, Deque> result = new HashMap<>();
+        int lineWithStackNrs = 0;
+        int amountOfStacks = 0;
 
-			while (teller < moveAantalKratten) {
+        for (int i = 0; i < input.size(); i++) {
+            if (!       input.get(i).isBlank() && Character.isDigit(input.get(i).strip().charAt(0))) {
+                lineWithStackNrs = i;
+                String line = input.get(i).strip();
+                amountOfStacks = Character.getNumericValue(line.charAt(line.length() - 1));
+            }
+        }
 
-				switch (from) {
+        int stackNr = 1;
 
-				case 1:
-					if(to == 2) {
-						stack2.push(stack1.pop());
-					}
-					if(to == 3) {
-						stack3.push(stack1.pop());
-					}
-					if(to == 4) {
-						stack4.push(stack1.pop());
-					}
-					if(to == 5) {
-						stack5.push(stack1.pop());
-					}
-					if(to == 6) {
-						stack6.push(stack1.pop());
-					}
-					if(to == 7) {
-						stack7.push(stack1.pop());
-					}
-					if(to == 8) {
-						stack8.push(stack1.pop());
-					}
-					if(to == 9) {
-						stack9.push(stack1.pop());
-					}
-					break;
+        for (int i = 0; i < amountOfStacks; i++) {
+            Deque<String> stack = new ArrayDeque<>();
+            for (int j = 0; j <= lineWithStackNrs; j++) {
+                String s = String.valueOf(input.get(lineWithStackNrs - j).charAt(stackNr));
+                if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".contains(s)) {
+                    stack.add(s);
+                }
+            }
 
-				case 2:
+            result.put(i + 1, stack);
+            stackNr += 4;
+        }
 
-					if(to == 1) {
-						stack1.push(stack2.pop());
-					}
-					if(to == 3) {
-						stack3.push(stack2.pop());
-					}
-					if(to == 4) {
-						stack4.push(stack2.pop());
-					}
-					if(to == 5) {
-						stack5.push(stack2.pop());
-					}
-					if(to == 6) {
-						stack6.push(stack2.pop());
-					}
-					if(to == 7) {
-						stack7.push(stack2.pop());
-					}
-					if(to == 8) {
-						stack8.push(stack2.pop());
-					}
-					if(to == 9) {
-						stack9.push(stack2.pop());
-					}
-					break;
+        return result;
+    }
 
-				case 3:
 
-					if(to == 1) {
-						stack1.push(stack3.pop());
-					}
-					if(to == 2) {
-						stack2.push(stack3.pop());
-					}
-					if(to == 4) {
-						stack4.push(stack3.pop());
-					}
-					if(to == 5) {
-						stack5.push(stack3.pop());
-					}
-					if(to == 6) {
-						stack6.push(stack3.pop());
-					}
-					if(to == 7) {
-						stack7.push(stack3.pop());
-					}
-					if(to == 8) {
-						stack8.push(stack3.pop());
-					}
-					if(to == 9) {
-						stack9.push(stack3.pop());
-					}
-					break;
+    public void moveCrate(Map<Integer, Deque> dequeMap, Instruction actualInstruction) {
+        int amount = actualInstruction.getAmount();
+        int from = actualInstruction.getFrom();
+        int to = actualInstruction.getTo();
 
-				case 4:
+        for (int i = 0; i < amount; i++) {
+            dequeMap.get(to).add(dequeMap.get(from).pollLast());
+        }
+    }
 
-					if(to == 1) {
-						stack1.push(stack4.pop());
-					}
-					if(to == 2) {
-						stack2.push(stack4.pop());
-					}
-					if(to == 3) {
-						stack3.push(stack4.pop());
-					}
-					if(to == 5) {
-						stack5.push(stack4.pop());
-					}
-					if(to == 6) {
-						stack6.push(stack4.pop());
-					}
-					if(to == 7) {
-						stack7.push(stack4.pop());
-					}
-					if(to == 8) {
-						stack8.push(stack4.pop());
-					}
-					if(to == 9) {
-						stack9.push(stack4.pop());
-					}
-					break;
+    public void moveCrate2(Map<Integer, Deque> dequeMap, Instruction actualInstruction) {
+        int amount = actualInstruction.getAmount();
+        int from = actualInstruction.getFrom();
+        int to = actualInstruction.getTo();
 
-				case 5:
+        Map<Integer, Deque> temp = new HashMap<>();
+        temp.put(0, new ArrayDeque());
 
-					if(to == 1) {
-						stack1.push(stack5.pop());
-					}
-					if(to == 2) {
-						stack2.push(stack5.pop());
-					}
-					if(to == 3) {
-						stack3.push(stack5.pop());
-					}
-					if(to == 4) {
-						stack4.push(stack5.pop());
-					}
-					if(to == 6) {
-						stack6.push(stack5.pop());
-					}
-					if(to == 7) {
-						stack7.push(stack5.pop());
-					}
-					if(to == 8) {
-						stack8.push(stack5.pop());
-					}
-					if(to == 9) {
-						stack9.push(stack5.pop());
-					}
-					break;
+        for (int i = 0; i < amount; i++) {
+            temp.get(0).add(dequeMap.get(from).pollLast());
+        }
 
-				case 6:
-
-					if(to == 1) {
-						stack1.push(stack6.pop());
-					}
-					if(to == 2) {
-						stack2.push(stack6.pop());
-					}
-					if(to == 3) {
-						stack3.push(stack6.pop());
-					}
-					if(to == 4) {
-						stack4.push(stack6.pop());
-					}
-					if(to == 5) {
-						stack5.push(stack6.pop());
-					}
-					if(to == 7) {
-						stack7.push(stack6.pop());
-					}
-					if(to == 8) {
-						stack8.push(stack6.pop());
-					}
-					if(to == 9) {
-						stack9.push(stack6.pop());
-					}
-					break;
-
-				case 7:
-
-					if(to == 1) {
-						stack1.push(stack7.pop());
-					}
-					if(to == 2) {
-						stack2.push(stack7.pop());
-					}
-					if(to == 3) {
-						stack3.push(stack7.pop());
-					}
-					if(to == 4) {
-						stack4.push(stack7.pop());
-					}
-					if(to == 5) {
-						stack5.push(stack7.pop());
-					}
-					if(to == 6) {
-						stack6.push(stack7.pop());
-					}
-					if(to == 8) {
-						stack8.push(stack7.pop());
-					}
-					if(to == 9) {
-						stack9.push(stack7.pop());
-					}
-					break;
-
-				case 8:
-
-					if(to == 1) {
-						stack1.push(stack8.pop());
-					}
-					if(to == 2) {
-						stack2.push(stack8.pop());
-					}
-					if(to == 3) {
-						stack3.push(stack8.pop());
-					}
-					if(to == 4) {
-						stack4.push(stack8.pop());
-					}
-					if(to == 5) {
-						stack5.push(stack8.pop());
-					}
-					if(to == 6) {
-						stack6.push(stack8.pop());
-					}
-					if(to == 7) {
-						stack7.push(stack8.pop());
-					}
-					if(to == 9) {
-						stack9.push(stack8.pop());
-					}
-					break;
-
-				case 9:
-
-					if(to == 1) {
-						stack1.push(stack9.pop());
-					}
-					if(to == 2) {
-						stack2.push(stack9.pop());
-					}
-					if(to == 3) {
-						stack3.push(stack9.pop());
-					}
-					if(to == 4) {
-						stack4.push(stack9.pop());
-					}
-					if(to == 5) {
-						stack5.push(stack9.pop());
-					}
-					if(to == 6) {
-						stack6.push(stack9.pop());
-					}
-					if(to == 7) {
-						stack7.push(stack9.pop());
-					}
-					if(to == 8) {
-						stack8.push(stack9.pop());
-					}
-					break;
-
-				}
-
-				teller++;
-			}
-		}
-
-		System.out.println("1: " + stack1.peek() + ". 2: " + stack2.peek() + ". 3: " + stack3.peek() + ". 4: "
-				+ stack4.peek() + ". 5: " + stack5.peek() + ". 6: " + stack6.peek() + ". 7: " + stack7.peek() + ". 8: "
-				+ stack8.peek() + ". 9: " + stack9.peek());
-	}
-
-	public void createStacks() {
-
-		stack1.push("S");
-		stack1.push("Z");
-		stack1.push("P");
-		stack1.push("D");
-		stack1.push("L");
-		stack1.push("B");
-		stack1.push("F");
-		stack1.push("C");
-
-		stack2.push("N");
-		stack2.push("V");
-		stack2.push("G");
-		stack2.push("P");
-		stack2.push("H");
-		stack2.push("W");
-		stack2.push("B");
-
-		stack3.push("F");
-		stack3.push("W");
-		stack3.push("B");
-		stack3.push("J");
-		stack3.push("G");
-
-		stack4.push("G");
-		stack4.push("J");
-		stack4.push("N");
-		stack4.push("F");
-		stack4.push("L");
-		stack4.push("W");
-		stack4.push("C");
-		stack4.push("S");
-
-		stack5.push("W");
-		stack5.push("J");
-		stack5.push("L");
-		stack5.push("T");
-		stack5.push("P");
-		stack5.push("M");
-		stack5.push("S");
-		stack5.push("H");
-
-		stack6.push("B");
-		stack6.push("C");
-		stack6.push("W");
-		stack6.push("G");
-		stack6.push("F");
-		stack6.push("S");
-
-		stack7.push("H");
-		stack7.push("T");
-		stack7.push("P");
-		stack7.push("M");
-		stack7.push("Q");
-		stack7.push("B");
-		stack7.push("W");
-
-		stack8.push("F");
-		stack8.push("S");
-		stack8.push("W");
-		stack8.push("T");
-
-		stack9.push("N");
-		stack9.push("C");
-		stack9.push("R");
-
-	}
-
+        for (int i = 0; i < amount; i++) {
+            dequeMap.get(to).add(temp.get(0).pollLast());
+        }
+    }
 }
