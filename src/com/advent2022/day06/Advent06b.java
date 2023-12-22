@@ -2,45 +2,37 @@ package com.advent2022.day06;
 
 import com.utilities.FileProcessor;
 
-import java.io.IOException;
 import java.util.List;
 
-public class Advent06b { // antwoord = 3534
+public class Advent06b {
 
-	List<String> bestand;
+	List<String> file;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		Advent06b aoc = new Advent06b();
 		aoc.opdracht6();
 	}
 
-	public void init() throws IOException {
-		bestand = FileProcessor.textFileToList("2022","06.txt");
+	public void opdracht6() {
+		file = FileProcessor.textFileToList("2022","06.txt");
+		String input = file.get(0);
+		String firstFourCharacters;
 
-	}
-
-	public void opdracht6() throws IOException {
-
-		init();
-		String input = bestand.get(0);
-		// String input = "mjqjpqmgbljsphdztnvjfqwrcgsmlb";
-		String eersteVierKarakters;
-
-		int teller = 13;
+		int count = 13;
 		int start = 0;
-		int eind = 14;
-		boolean checkBool = true;
+		int end = 14;
+		boolean check = true;
 
-		while (checkBool) {
-			eersteVierKarakters = input.substring(start, eind);
-			checkBool = !firstFourCharactersAreUnique(eersteVierKarakters);
+		while (check) {
+			firstFourCharacters = input.substring(start, end);
+			check = !firstFourCharactersAreUnique(firstFourCharacters);
 
-			teller++;
+			count++;
 			start++;
-			eind++;
-			System.out.println(teller);
-		}
+			end++;
 
+		}
+		System.out.println(count);
 	}
 
 	public boolean firstFourCharactersAreUnique(String s) {
@@ -348,5 +340,4 @@ public class Advent06b { // antwoord = 3534
 
 		return b;
 	}
-
 }

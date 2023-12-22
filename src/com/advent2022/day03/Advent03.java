@@ -2,9 +2,6 @@ package com.advent2022.day03;
 
 import com.utilities.FileProcessor;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,116 +10,93 @@ import java.util.Map;
 public class Advent03 {
 
 	List<String> listOfLines = new ArrayList<>();
-	int teller = 0;
-	Integer totaal = 0;
+	int count;
+	int total;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		Advent03 aoc3 = new Advent03();
 		aoc3.opdracht3();
 	}
 
-	public void opdracht3() throws IOException {
+	public void opdracht3() {
 
 		listOfLines = FileProcessor.textFileToList("2022","03.txt");
 
-		/*
-		 * char c = 65; char d = 90; char e = 97; char f = 122;
-		 * 
-		 * System.out.println(c); System.out.println(d); System.out.println(e);
-		 * System.out.println(f);
-		 */
+		Map<String, Integer> valueMap = new HashMap<>();
+		valueMap.put("a", 1);
+		valueMap.put("b", 2);
+		valueMap.put("c", 3);
+		valueMap.put("d", 4);
+		valueMap.put("e", 5);
+		valueMap.put("f", 6);
+		valueMap.put("g", 7);
+		valueMap.put("h", 8);
+		valueMap.put("i", 9);
+		valueMap.put("j", 10);
+		valueMap.put("k", 11);
+		valueMap.put("l", 12);
+		valueMap.put("m", 13);
+		valueMap.put("n", 14);
+		valueMap.put("o", 15);
+		valueMap.put("p", 16);
+		valueMap.put("q", 17);
+		valueMap.put("r", 18);
+		valueMap.put("s", 19);
+		valueMap.put("t", 20);
+		valueMap.put("u", 21);
+		valueMap.put("v", 22);
+		valueMap.put("w", 23);
+		valueMap.put("x", 24);
+		valueMap.put("y", 25);
+		valueMap.put("z", 26);
+		valueMap.put("A", 27);
+		valueMap.put("B", 28);
+		valueMap.put("C", 29);
+		valueMap.put("D", 30);
+		valueMap.put("E", 31);
+		valueMap.put("F", 32);
+		valueMap.put("G", 33);
+		valueMap.put("H", 34);
+		valueMap.put("I", 35);
+		valueMap.put("J", 36);
+		valueMap.put("K", 37);
+		valueMap.put("L", 38);
+		valueMap.put("M", 39);
+		valueMap.put("N", 40);
+		valueMap.put("O", 41);
+		valueMap.put("P", 42);
+		valueMap.put("Q", 43);
+		valueMap.put("R", 44);
+		valueMap.put("S", 45);
+		valueMap.put("T", 46);
+		valueMap.put("U", 47);
+		valueMap.put("V", 48);
+		valueMap.put("W", 49);
+		valueMap.put("X", 50);
+		valueMap.put("Y", 51);
+		valueMap.put("Z", 52);
 
-		Map<String, Integer> waardenMap = new HashMap<>();
-		waardenMap.put("a", 1);
-		waardenMap.put("b", 2);
-		waardenMap.put("c", 3);
-		waardenMap.put("d", 4);
-		waardenMap.put("e", 5);
-		waardenMap.put("f", 6);
-		waardenMap.put("g", 7);
-		waardenMap.put("h", 8);
-		waardenMap.put("i", 9);
-		waardenMap.put("j", 10);
-		waardenMap.put("k", 11);
-		waardenMap.put("l", 12);
-		waardenMap.put("m", 13);
-		waardenMap.put("n", 14);
-		waardenMap.put("o", 15);
-		waardenMap.put("p", 16);
-		waardenMap.put("q", 17);
-		waardenMap.put("r", 18);
-		waardenMap.put("s", 19);
-		waardenMap.put("t", 20);
-		waardenMap.put("u", 21);
-		waardenMap.put("v", 22);
-		waardenMap.put("w", 23);
-		waardenMap.put("x", 24);
-		waardenMap.put("y", 25);
-		waardenMap.put("z", 26);
-		waardenMap.put("A", 27);
-		waardenMap.put("B", 28);
-		waardenMap.put("C", 29);
-		waardenMap.put("D", 30);
-		waardenMap.put("E", 31);
-		waardenMap.put("F", 32);
-		waardenMap.put("G", 33);
-		waardenMap.put("H", 34);
-		waardenMap.put("I", 35);
-		waardenMap.put("J", 36);
-		waardenMap.put("K", 37);
-		waardenMap.put("L", 38);
-		waardenMap.put("M", 39);
-		waardenMap.put("N", 40);
-		waardenMap.put("O", 41);
-		waardenMap.put("P", 42);
-		waardenMap.put("Q", 43);
-		waardenMap.put("R", 44);
-		waardenMap.put("S", 45);
-		waardenMap.put("T", 46);
-		waardenMap.put("U", 47);
-		waardenMap.put("V", 48);
-		waardenMap.put("W", 49);
-		waardenMap.put("X", 50);
-		waardenMap.put("Y", 51);
-		waardenMap.put("Z", 52);
-
-		while (teller < listOfLines.size()) {
-
-			String s = listOfLines.get(teller);
+		while (count < listOfLines.size()) {
+			String s = listOfLines.get(count);
 			int i = s.length() / 2;
 			String s2 = s.substring(0, i);
-			String s3 = s.substring(i, s.length());
+			String s3 = s.substring(i);
 
-			int teller2 = 0;
+			int count2 = 0;
 
-			while (teller2 < s2.length()) {
-				String b = String.valueOf(s2.charAt(teller2));
+			while (count2 < s2.length()) {
+				String b = String.valueOf(s2.charAt(count2));
 
 				if (s3.contains(b)) {
-					totaal = totaal + waardenMap.get(b);
-					teller2 = s2.length();
+					total = total + valueMap.get(b);
+					count2 = s2.length();
 				}
 
-				teller2++;
-
+				count2++;
 			}
 
-			teller++;
-
+			count++;
 		}
-		System.out.println("Antwoord Advent dag 3-1: " + totaal);
-
+		System.out.println("Solution 3-1: " + total);
 	}
-
-	public void leesBestandOpdr3() throws IOException {
-		BufferedReader bufReader = new BufferedReader(new FileReader("03advent.txt"));
-
-		String line = bufReader.readLine();
-		while (line != null) {
-			listOfLines.add(line);
-			line = bufReader.readLine();
-		}
-		bufReader.close();
-	}
-
 }
